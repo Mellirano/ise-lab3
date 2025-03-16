@@ -1,0 +1,25 @@
+plugins {
+    id 'java'
+}
+
+group = 'ua.udunt.ise'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation(
+            'org.knowm.xchart:xchart:3.8.8'
+    )
+    testImplementation platform(
+            'org.junit:junit-bom:5.10.0'
+    )
+    testImplementation(
+            'org.junit.jupiter:junit-jupiter'
+    )
+}
+
+test {
+    useJUnitPlatform()
+}
