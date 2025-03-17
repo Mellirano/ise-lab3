@@ -15,26 +15,33 @@ import org.knowm.xchart.CategoryChartBuilder;
 import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.style.Styler;
 
-
-public class ProbabilisticAnalyzer {
+/**
+ * The {@code ProbabilisticAnalyzer} class extends {@code AbstractAnalyzer} and performs probabilistic
+ * and combinatorial analysis of lexemes stored in different data structures: LinkedList, Queue, and Stack.
+ * It measures the performance of adding, searching, and removing lexemes from these structures.
+ */
+public class ProbabilisticAnalyzer extends AbstractAnalyzer {
 
     private final LinkedList<String> linkedList = new LinkedList<>();
     private final Queue<String> queue = new LinkedList<>();
     private final Stack<String> stack = new Stack<>();
     private final Map<DataStructure, OperationStats> stats = new EnumMap<>(DataStructure.class);
 
+    /**
+     * Initializes the analyzer and sets up operation statistics for each data structure.
+     */
     public ProbabilisticAnalyzer() {
         for (DataStructure ds : DataStructure.values()) {
             stats.put(ds, new OperationStats());
         }
     }
 
-    private long measureTime(Runnable operation) {
-        long start = System.nanoTime();
-        operation.run();
-        return System.nanoTime() - start;
-    }
-
+    /**
+     * Adds a lexeme to all data structures if it does not already exist.
+     *
+     * @param lexeme the lexeme to add
+     */
+    @Override
     public void addLexeme(String lexeme) {
         addToStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
         addToStructure(lexeme, queue, DataStructure.QUEUE);
@@ -49,6 +56,12 @@ public class ProbabilisticAnalyzer {
         }
     }
 
+    /**
+     * Removes a lexeme from all data structures.
+     *
+     * @param lexeme the lexeme to remove
+     */
+    @Override
     public void removeLexeme(String lexeme) {
         removeFromStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
         removeFromStructure(lexeme, queue, DataStructure.QUEUE);
@@ -63,6 +76,12 @@ public class ProbabilisticAnalyzer {
         }
     }
 
+    /**
+     * Searches for a lexeme in all data structures.
+     *
+     * @param lexeme the lexeme to search for
+     */
+    @Override
     public void searchLexeme(String lexeme) {
         searchInStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
         searchInStructure(lexeme, queue, DataStructure.QUEUE);
@@ -75,11 +94,29 @@ public class ProbabilisticAnalyzer {
         stat.searchOps++;
     }
 
-    public void extractLexemes(String code) {
-        extractLexemes(code, null);
+    /**
+     * Analyzes performance of lexeme operations and performs a given operation before analysis.
+     *
+     * @param code      the source code to analyze
+     * @param operation the operation to execute before analysis
+     */
+    public void analyzePerformance(String code, Runnable operation) {
+        analyzePerformance(code, operation, null);
     }
 
-    public void extractLexemes(String code, LexemeType lexemeType) {
+    /**
+     * Analyzes performance of lexeme operations, performs a given operation before analysis,
+     * and allows filtering by lexeme type.
+     *
+     * @param code       the source code to analyze
+     * @param operation  the operation to execute before analysis
+     * @param lexemeType the specific lexeme type to analyze (or null for all types)
+     */
+    @Override
+    public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
+        if (code == null || code.isEmpty()) {
+            throw new IllegalArgumentException("Code cannot be null or empty");
+        }
         Map<LexemeType, Set<String>> lexemesByType;
         if (lexemeType != null) {
             lexemesByType = LexemeAnalyzer.analyzeCode(code, lexemeType);
@@ -91,13 +128,18 @@ public class ProbabilisticAnalyzer {
                 addLexeme(lexeme);
             }
         }
+        boolean hasLexemes = !linkedList.isEmpty() || !queue.isEmpty() || !stack.isEmpty();
+        if (!hasLexemes) {
+            throw new IllegalArgumentException("No lexemes available for performance analysis");
+        }
         System.out.println("\nExtracted lexemes in each data structure:");
         System.out.println("LinkedList: " + linkedList);
         System.out.println("Queue: " + queue);
         System.out.println("Stack: " + stack);
-    }
 
-    public void analyzePerformance() {
+        System.out.println("\nPerform some operations before analysis:");
+        operation.run();
+
         System.out.println("\nProbabilistic-combinatorial analysis of each function:");
         for (DataStructure ds : DataStructure.values()) {
             OperationStats stat = stats.get(ds);
@@ -142,6 +184,9 @@ public class ProbabilisticAnalyzer {
         new SwingWrapper<>(chart).displayChart();
     }
 
+    /**
+     * Enum representing different data structures used in the analysis.
+     */
     public enum DataStructure {
 
         LINKED_LIST,
@@ -150,6 +195,9 @@ public class ProbabilisticAnalyzer {
 
     }
 
+    /**
+     * Stores operation statistics for each data structure.
+     */
     private static class OperationStats {
 
         long addTime = 0;
