@@ -2,7 +2,6 @@ package ua.udunt.ise.analyzer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -11,9 +10,14 @@ import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import java.util.Stack;
-import ua.udunt.ise.LexemeAnalyzer;
-import ua.udunt.ise.LexemeType;
+import ua.udunt.ise.lexeme.LexemeAnalyzer;
+import ua.udunt.ise.lexeme.LexemeType;
 
+/**
+ * The {@code TimingAnalyzer} class extends {@code AbstractAnalyzer} to perform timing analysis
+ * on lexeme operations using a Queue and Stack data structure. It measures the performance of
+ * lexeme addition, searching, and removal.
+ */
 public class TimingAnalyzer extends AbstractAnalyzer {
 
     private final Queue<String> queue = new LinkedList<>();
@@ -27,12 +31,22 @@ public class TimingAnalyzer extends AbstractAnalyzer {
             "Queue", "Stack"
     );
 
+    /**
+     * Initializes the timing analyzer and sets up operation statistics for each data structure.
+     */
     public TimingAnalyzer() {
         for (DataStructure ds : supportedDataStructures) {
             stats.put(ds, new OperationStats());
         }
     }
 
+    /**
+     * Analyzes the performance of lexeme operations and executes a specified operation before analysis.
+     *
+     * @param code       the source code to analyze
+     * @param operation  a runnable operation to execute before analysis
+     * @param lexemeType the specific lexeme type to analyze (or null for all types)
+     */
     @Override
     public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
         extractLexemes(code, lexemeType);
@@ -56,10 +70,22 @@ public class TimingAnalyzer extends AbstractAnalyzer {
         visualizePerformance(chartLabels, supportedDataStructures);
     }
 
+    /**
+     * Analyzes lexeme performance with a default lexeme type (null).
+     *
+     * @param code      the source code to analyze
+     * @param operation a runnable operation to execute before analysis
+     */
     public void analyzePerformance(String code, Runnable operation) {
         analyzePerformance(code, operation, null);
     }
 
+    /**
+     * Extracts lexemes from the given code based on the specified lexeme type.
+     *
+     * @param code       the source code to analyze
+     * @param lexemeType the specific lexeme type to extract (or null for all types)
+     */
     private void extractLexemes(String code, LexemeType lexemeType) {
         Map<LexemeType, Set<String>> lexemesByType;
         if (lexemeType != null) {
@@ -82,64 +108,54 @@ public class TimingAnalyzer extends AbstractAnalyzer {
         }
     }
 
+    /**
+     * Adds a lexeme to both queue and stack data structures.
+     *
+     * @param lexeme the lexeme to add
+     */
     @Override
     public void addLexeme(String lexeme) {
         addToStructure(lexeme, queue, DataStructure.QUEUE);
         addToStructure(lexeme, stack, DataStructure.STACK);
     }
 
-    private void addToStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        if (!structure.contains(lexeme)) {
-            long addTime = measureTime(() -> structure.add(lexeme));
-            stat.addTime += addTime;
-            stat.addOps++;
-            System.out.printf("Adding time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                    lexeme, type.toString(), addTime / 1000.0);
-            ;
-        } else {
-            System.out.printf("Lexeme (%s) already exists\n", lexeme);
-        }
-    }
-
+    /**
+     * Removes a lexeme from both queue and stack data structures.
+     *
+     * @param lexeme the lexeme to remove
+     */
     @Override
     public void removeLexeme(String lexeme) {
         removeFromStructure(lexeme, queue, DataStructure.QUEUE);
         removeFromStructure(lexeme, stack, DataStructure.STACK);
     }
 
-    private void removeFromStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        if (structure.contains(lexeme)) {
-            long removeTime = measureTime(() -> structure.remove(lexeme));
-            stat.removeTime += removeTime;
-            stat.removeOps++;
-            System.out.printf("Removing time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                    lexeme, type.toString(), removeTime / 1000.0);
-        } else {
-            System.out.printf("Lexeme (%s) does not exist\n", lexeme);
-        }
-    }
-
+    /**
+     * Searches for a lexeme in both queue and stack data structures.
+     *
+     * @param lexeme the lexeme to search for
+     */
     @Override
     public void searchLexeme(String lexeme) {
         searchInStructure(lexeme, queue, DataStructure.QUEUE);
         searchInStructure(lexeme, stack, DataStructure.STACK);
     }
 
-    private void searchInStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        long searchTime = measureTime(() -> structure.contains(lexeme));
-        stat.searchTime += searchTime;
-        stat.searchOps++;
-        System.out.printf("Searching time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                lexeme, type.toString(), searchTime / 1000.0);
-    }
-
+    /**
+     * Retrieves a random lexeme count from the queue.
+     *
+     * @return a random number of lexemes in the queue
+     */
     public int getRandomLexemeCount() {
         return random.nextInt(queue.size()) + 1;
     }
 
+    /**
+     * Retrieves a lexeme from the queue based on an index.
+     *
+     * @param index the index to search for
+     * @return the lexeme found at the given index, or null if not found
+     */
     public String searchLexemeByIndex(int index) {
         return queue.stream()
                 .skip(index)

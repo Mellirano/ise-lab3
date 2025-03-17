@@ -1,4 +1,4 @@
-package ua.udunt.ise;
+package ua.udunt.ise.lexeme;
 
 import java.util.regex.Pattern;
 

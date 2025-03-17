@@ -1,16 +1,20 @@
 package ua.udunt.ise.analyzer;
 
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.Stack;
-import ua.udunt.ise.LexemeAnalyzer;
-import ua.udunt.ise.LexemeType;
+import ua.udunt.ise.lexeme.LexemeAnalyzer;
+import ua.udunt.ise.lexeme.LexemeType;
 
+/**
+ * The {@code ProbabilisticAnalyzer} class extends {@code AbstractAnalyzer} to perform
+ * probabilistic and combinatorial analysis of lexemes stored in different data structures.
+ * It measures the performance of lexeme addition, searching, and removal.
+ */
 public class ProbabilisticAnalyzer extends AbstractAnalyzer {
 
     private final LinkedList<String> linkedList = new LinkedList<>();
@@ -20,12 +24,22 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
             "LinkedList", "Queue", "Stack"
     );
 
+    /**
+     * Initializes the probabilistic analyzer and sets up operation statistics for each data structure.
+     */
     public ProbabilisticAnalyzer() {
         for (DataStructure ds : DataStructure.values()) {
             stats.put(ds, new OperationStats());
         }
     }
 
+    /**
+     * Analyzes the performance of lexeme operations and executes a specified operation before analysis.
+     *
+     * @param code       the source code to analyze
+     * @param operation  a runnable operation to execute before analysis
+     * @param lexemeType the specific lexeme type to analyze (or null for all types)
+     */
     @Override
     public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
         extractLexemes(code, lexemeType);
@@ -51,10 +65,22 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
         visualizePerformance(chartLabels, List.of(DataStructure.values()));
     }
 
+    /**
+     * Analyzes lexeme performance with a default lexeme type (null).
+     *
+     * @param code      the source code to analyze
+     * @param operation a runnable operation to execute before analysis
+     */
     public void analyzePerformance(String code, Runnable operation) {
         analyzePerformance(code, operation, null);
     }
 
+    /**
+     * Extracts lexemes from the given code based on the specified lexeme type.
+     *
+     * @param code       the source code to analyze
+     * @param lexemeType the specific lexeme type to extract (or null for all types)
+     */
     private void extractLexemes(String code, LexemeType lexemeType) {
         if (code == null || code.isEmpty()) {
             throw new IllegalArgumentException("Code cannot be null or empty");
@@ -72,6 +98,11 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
         }
     }
 
+    /**
+     * Adds a lexeme to all data structures.
+     *
+     * @param lexeme the lexeme to add
+     */
     @Override
     public void addLexeme(String lexeme) {
         addToStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
@@ -79,14 +110,11 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
         addToStructure(lexeme, stack, DataStructure.STACK);
     }
 
-    private void addToStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        if (!structure.contains(lexeme)) {
-            stat.addTime += measureTime(() -> structure.add(lexeme));
-            stat.addOps++;
-        }
-    }
-
+    /**
+     * Removes a lexeme from all data structures.
+     *
+     * @param lexeme the lexeme to remove
+     */
     @Override
     public void removeLexeme(String lexeme) {
         removeFromStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
@@ -94,25 +122,16 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
         removeFromStructure(lexeme, stack, DataStructure.STACK);
     }
 
-    private void removeFromStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        if (structure.contains(lexeme)) {
-            stat.removeTime += measureTime(() -> structure.remove(lexeme));
-            stat.removeOps++;
-        }
-    }
-
+    /**
+     * Searches for a lexeme in all data structures.
+     *
+     * @param lexeme the lexeme to search for
+     */
     @Override
     public void searchLexeme(String lexeme) {
         searchInStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
         searchInStructure(lexeme, queue, DataStructure.QUEUE);
         searchInStructure(lexeme, stack, DataStructure.STACK);
-    }
-
-    private void searchInStructure(String lexeme, Collection<String> structure, DataStructure type) {
-        OperationStats stat = stats.get(type);
-        stat.searchTime += measureTime(() -> structure.contains(lexeme));
-        stat.searchOps++;
     }
 
 }
