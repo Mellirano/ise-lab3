@@ -1,6 +1,6 @@
 package ua.udunt.ise.analyzer;
 
-import java.util.Arrays;
+import java.util.ArrayDeque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,11 +18,8 @@ import ua.udunt.ise.lexeme.LexemeType;
 public class ProbabilisticAnalyzer extends AbstractAnalyzer {
 
     private final LinkedList<String> linkedList = new LinkedList<>();
-    private final Queue<String> queue = new LinkedList<>();
+    private final Queue<String> queue = new ArrayDeque<>();
     private final Stack<String> stack = new Stack<>();
-    private final List<String> chartLabels = Arrays.asList(
-            "LinkedList", "Queue", "Stack"
-    );
 
     /**
      * Initializes the probabilistic analyzer and sets up operation statistics for each data structure.
@@ -62,7 +59,7 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
             printPerformance(ds, "Searches", stat.searchOps, stat.searchTime);
             printPerformance(ds, "Removals", stat.removeOps, stat.removeTime);
         }
-        visualizePerformance(chartLabels, List.of(DataStructure.values()));
+        visualizePerformance(List.of(DataStructure.values()));
     }
 
     /**

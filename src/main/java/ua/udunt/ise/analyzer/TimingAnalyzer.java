@@ -1,5 +1,6 @@
 package ua.udunt.ise.analyzer;
 
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -9,26 +10,22 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
-import java.util.Stack;
 import ua.udunt.ise.lexeme.LexemeAnalyzer;
 import ua.udunt.ise.lexeme.LexemeType;
 
 /**
  * The {@code TimingAnalyzer} class extends {@code AbstractAnalyzer} to perform timing analysis
- * on lexeme operations using a Queue and Stack data structure. It measures the performance of
+ * on lexeme operations using a Queue and LinkedList data structure. It measures the performance of
  * lexeme addition, searching, and removal.
  */
 public class TimingAnalyzer extends AbstractAnalyzer {
 
-    private final Queue<String> queue = new LinkedList<>();
-    private final Stack<String> stack = new Stack<>();
+    private final Queue<String> queue = new ArrayDeque<>();
+    private final List<String> linkedList = new LinkedList<>();
     private final Random random = new Random();
     private final List<DataStructure> supportedDataStructures = Arrays.asList(
             DataStructure.QUEUE,
-            DataStructure.STACK
-    );
-    private final List<String> chartLabels = Arrays.asList(
-            "Queue", "Stack"
+            DataStructure.LINKED_LIST
     );
 
     /**
@@ -50,13 +47,13 @@ public class TimingAnalyzer extends AbstractAnalyzer {
     @Override
     public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
         extractLexemes(code, lexemeType);
-        boolean hasLexemes = !queue.isEmpty() || !stack.isEmpty();
+        boolean hasLexemes = !queue.isEmpty() || !linkedList.isEmpty();
         if (!hasLexemes) {
             throw new IllegalArgumentException("No lexemes available for performance analysis");
         }
         System.out.println("\nExtracted lexemes in each data structure:");
         System.out.println("Queue: " + queue);
-        System.out.println("Stack: " + stack);
+        System.out.println("LinkedList: " + linkedList);
 
         operation.run();
 
@@ -67,7 +64,7 @@ public class TimingAnalyzer extends AbstractAnalyzer {
             printPerformance(ds, "Searches", stat.searchOps, stat.searchTime);
             printPerformance(ds, "Removals", stat.removeOps, stat.removeTime);
         }
-        visualizePerformance(chartLabels, supportedDataStructures);
+        visualizePerformance(supportedDataStructures);
     }
 
     /**
@@ -109,36 +106,36 @@ public class TimingAnalyzer extends AbstractAnalyzer {
     }
 
     /**
-     * Adds a lexeme to both queue and stack data structures.
+     * Adds a lexeme to both queue and linked list data structures.
      *
      * @param lexeme the lexeme to add
      */
     @Override
     public void addLexeme(String lexeme) {
         addToStructure(lexeme, queue, DataStructure.QUEUE);
-        addToStructure(lexeme, stack, DataStructure.STACK);
+        addToStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**
-     * Removes a lexeme from both queue and stack data structures.
+     * Removes a lexeme from both queue and linked list data structures.
      *
      * @param lexeme the lexeme to remove
      */
     @Override
     public void removeLexeme(String lexeme) {
         removeFromStructure(lexeme, queue, DataStructure.QUEUE);
-        removeFromStructure(lexeme, stack, DataStructure.STACK);
+        removeFromStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**
-     * Searches for a lexeme in both queue and stack data structures.
+     * Searches for a lexeme in both queue and linked list data structures.
      *
      * @param lexeme the lexeme to search for
      */
     @Override
     public void searchLexeme(String lexeme) {
         searchInStructure(lexeme, queue, DataStructure.QUEUE);
-        searchInStructure(lexeme, stack, DataStructure.STACK);
+        searchInStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**

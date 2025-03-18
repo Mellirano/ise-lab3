@@ -27,22 +27,26 @@ public class IseApplication {
      *             If no argument is provided, timing analysis is executed by default.
      */
     public static void main(String[] args) {
+        int repeatCount = 10;
         if (args.length == 0) {
             System.out.println("No argument provided. Running default timing analysis...");
-            runTimingAnalysis();
+            runTimingAnalysis(repeatCount);
         } else {
+            if(args[1] != null) {
+                repeatCount = Integer.parseInt(args[1]);
+            }
             switch (args[0].toLowerCase()) {
                 case "timing" -> {
                     System.out.println("Running timing analysis...");
-                    runTimingAnalysis();
+                    runTimingAnalysis(repeatCount);
                 }
                 case "probabilistic" -> {
                     System.out.println("Running probabilistic analysis...");
-                    runProbabilisticAnalysis();
+                    runProbabilisticAnalysis(repeatCount);
                 }
                 default -> {
                     System.out.println("Invalid argument. Use 'timing' or 'probabilistic'. Running default timing analysis...");
-                    runTimingAnalysis();
+                    runTimingAnalysis(repeatCount);
                 }
             }
         }
@@ -65,27 +69,28 @@ public class IseApplication {
      * Executes the timing analysis, measuring the performance of lexeme operations such as addition,
      * searching, and removal.
      */
-    private static void runTimingAnalysis() {
+    private static void runTimingAnalysis(int repeatCount) {
         TimingAnalyzer analyzer = new TimingAnalyzer();
         System.out.println("\nPerforming timing analysis...");
         analyzer.analyzePerformance(SAMPLE_CODE, () -> {
             Random random = new Random();
+            for (int i = 0; i < repeatCount; i++) {
+                String newLexeme = LexemeGenerator.generateRandomLexeme();
+                System.out.println("Adding lexeme: " + newLexeme);
+                analyzer.addLexeme(newLexeme);
 
-            String newLexeme = LexemeGenerator.generateRandomLexeme();
-            System.out.println("Adding lexeme: " + newLexeme);
-            analyzer.addLexeme(newLexeme);
-
-            int removeIndex = random.nextInt(analyzer.getRandomLexemeCount());
-            String removeLexeme = analyzer.searchLexemeByIndex(removeIndex);
-            if (removeLexeme != null) {
-                System.out.println("Removing lexeme: " + removeLexeme);
-                analyzer.removeLexeme(removeLexeme);
-            }
-            int searchIndex = random.nextInt(analyzer.getRandomLexemeCount());
-            String searchLexeme = analyzer.searchLexemeByIndex(searchIndex);
-            if (searchLexeme != null) {
-                System.out.println("Searching lexeme: " + searchLexeme);
-                analyzer.searchLexeme(searchLexeme);
+                int searchIndex = random.nextInt(analyzer.getRandomLexemeCount());
+                String searchLexeme = analyzer.searchLexemeByIndex(searchIndex);
+                if (searchLexeme != null) {
+                    System.out.println("Searching lexeme: " + searchLexeme);
+                    analyzer.searchLexeme(searchLexeme);
+                }
+                int removeIndex = random.nextInt(analyzer.getRandomLexemeCount());
+                String removeLexeme = analyzer.searchLexemeByIndex(removeIndex);
+                if (removeLexeme != null) {
+                    System.out.println("Removing lexeme: " + removeLexeme);
+                    analyzer.removeLexeme(removeLexeme);
+                }
             }
         });
     }
@@ -93,12 +98,12 @@ public class IseApplication {
     /**
      * Executes the probabilistic analysis, performing operations on randomly generated lexemes.
      */
-    private static void runProbabilisticAnalysis() {
+    private static void runProbabilisticAnalysis(int repeatCount) {
         try {
             ProbabilisticAnalyzer analyzer = new ProbabilisticAnalyzer();
             System.out.println("\nPerforming performance analysis...");
             analyzer.analyzePerformance(SAMPLE_CODE, () -> {
-                for (String lexeme : LexemeGenerator.generateLexemes(15)) {
+                for (String lexeme : LexemeGenerator.generateLexemes(repeatCount)) {
                     System.out.println("Searching lexeme: " + lexeme);
                     analyzer.searchLexeme(lexeme);
 

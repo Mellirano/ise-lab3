@@ -74,8 +74,8 @@ public abstract class AbstractAnalyzer {
             long addTime = measureTime(() -> structure.add(lexeme));
             stat.addTime += addTime;
             stat.addOps++;
-            System.out.printf("Adding time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                    lexeme, type.toString(), addTime / 1000.0);
+            System.out.printf("Adding time for lexeme (%s) in structure (%s): %d ns%n\n",
+                    lexeme, type.toString(), addTime);
             ;
         } else {
             System.out.printf("Lexeme (%s) already exists\n", lexeme);
@@ -95,8 +95,8 @@ public abstract class AbstractAnalyzer {
             long removeTime = measureTime(() -> structure.remove(lexeme));
             stat.removeTime += removeTime;
             stat.removeOps++;
-            System.out.printf("Removing time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                    lexeme, type.toString(), removeTime / 1000.0);
+            System.out.printf("Removing time for lexeme (%s) in structure (%s): %d ns%n\n",
+                    lexeme, type.toString(), removeTime);
         } else {
             System.out.printf("Lexeme (%s) does not exist\n", lexeme);
         }
@@ -114,8 +114,8 @@ public abstract class AbstractAnalyzer {
         long searchTime = measureTime(() -> structure.contains(lexeme));
         stat.searchTime += searchTime;
         stat.searchOps++;
-        System.out.printf("Searching time for lexeme (%s) in structure (%s): %.2f microseconds\n",
-                lexeme, type.toString(), searchTime / 1000.0);
+        System.out.printf("Searching time for lexeme (%s) in structure (%s): %d ns%n\n",
+                lexeme, type.toString(), searchTime);
     }
 
     /**
@@ -127,26 +127,27 @@ public abstract class AbstractAnalyzer {
      * @param time     the total execution time
      */
     void printPerformance(DataStructure ds, String operation, int ops, long time) {
-        double avgTime = ops == 0 ? 0 : time / (ops * 1000.0);
-        System.out.printf("%s -> %s: %d operations, Average time: %.2f microseconds\n", ds, operation, ops, avgTime);
+        double avgTime = ops == 0 ? 0 : (double) time / ops;
+        System.out.printf("%s -> %s: %d operations, Average time: %.2f ns\n", ds, operation, ops, avgTime);
     }
 
     /**
      * Visualizes the performance results using a bar chart.
      *
-     * @param labels                  the labels for each data structure
      * @param supportedDataStructures  the data structures analyzed
      */
-    void visualizePerformance(List<String> labels, List<DataStructure> supportedDataStructures) {
+    void visualizePerformance(List<DataStructure> supportedDataStructures) {
         List<Double> addTimes = new ArrayList<>();
         List<Double> searchTimes = new ArrayList<>();
         List<Double> removeTimes = new ArrayList<>();
+        List<String> labels = new ArrayList<>();
 
         for (DataStructure ds : supportedDataStructures) {
             OperationStats stat = stats.get(ds);
-            addTimes.add(stat.addOps == 0 ? 0 : stat.addTime / (double) (stat.addOps * 1000));
-            searchTimes.add(stat.searchOps == 0 ? 0 : stat.searchTime / (double) (stat.searchOps * 1000));
-            removeTimes.add(stat.removeOps == 0 ? 0 : stat.removeTime / (double) (stat.removeOps * 1000));
+            labels.add(ds.name());
+            addTimes.add(stat.addOps == 0 ? 0 : stat.addTime / (double) (stat.addOps));
+            searchTimes.add(stat.searchOps == 0 ? 0 : stat.searchTime / (double) (stat.searchOps));
+            removeTimes.add(stat.removeOps == 0 ? 0 : stat.removeTime / (double) (stat.removeOps));
         }
 
         CategoryChart chart = new CategoryChartBuilder()
@@ -154,7 +155,7 @@ public abstract class AbstractAnalyzer {
                 .height(600)
                 .title("Data Structure Performance")
                 .xAxisTitle("Operations")
-                .yAxisTitle("Time (microseconds)")
+                .yAxisTitle("Time (nanoseconds)")
                 .theme(Styler.ChartTheme.GGPlot2)
                 .build();
 
