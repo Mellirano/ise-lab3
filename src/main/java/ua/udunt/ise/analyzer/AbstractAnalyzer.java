@@ -76,7 +76,6 @@ public abstract class AbstractAnalyzer {
             stat.addOps++;
             System.out.printf("Adding time for lexeme (%s) in structure (%s): %d ns%n\n",
                     lexeme, type.toString(), addTime);
-            ;
         } else {
             System.out.printf("Lexeme (%s) already exists\n", lexeme);
         }
