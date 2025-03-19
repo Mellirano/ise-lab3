@@ -172,6 +172,7 @@ public abstract class AbstractAnalyzer {
     enum DataStructure {
 
         LINKED_LIST,
+        DEQUE,
         QUEUE,
         STACK
 

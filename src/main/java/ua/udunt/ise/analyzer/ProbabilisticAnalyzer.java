@@ -1,6 +1,6 @@
 package ua.udunt.ise.analyzer;
 
-import java.util.ArrayDeque;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -18,14 +18,20 @@ import ua.udunt.ise.lexeme.LexemeType;
 public class ProbabilisticAnalyzer extends AbstractAnalyzer {
 
     private final LinkedList<String> linkedList = new LinkedList<>();
-    private final Queue<String> queue = new ArrayDeque<>();
+    private final Queue<String> queue = new LinkedList<>();
     private final Stack<String> stack = new Stack<>();
+
+    private final List<DataStructure> supportedDataStructures = Arrays.asList(
+            DataStructure.LINKED_LIST,
+            DataStructure.QUEUE,
+            DataStructure.STACK
+    );
 
     /**
      * Initializes the probabilistic analyzer and sets up operation statistics for each data structure.
      */
     public ProbabilisticAnalyzer() {
-        for (DataStructure ds : DataStructure.values()) {
+        for (DataStructure ds : supportedDataStructures) {
             stats.put(ds, new OperationStats());
         }
     }
@@ -53,13 +59,13 @@ public class ProbabilisticAnalyzer extends AbstractAnalyzer {
         operation.run();
 
         System.out.println("\nProbabilistic-combinatorial analysis of each function:");
-        for (DataStructure ds : DataStructure.values()) {
+        for (DataStructure ds : supportedDataStructures) {
             OperationStats stat = stats.get(ds);
             printPerformance(ds, "Additions", stat.addOps, stat.addTime);
             printPerformance(ds, "Searches", stat.searchOps, stat.searchTime);
             printPerformance(ds, "Removals", stat.removeOps, stat.removeTime);
         }
-        visualizePerformance(List.of(DataStructure.values()));
+        visualizePerformance(supportedDataStructures);
     }
 
     /**

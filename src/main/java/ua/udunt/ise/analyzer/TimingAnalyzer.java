@@ -4,10 +4,10 @@ import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 import java.util.Random;
 import java.util.Set;
 import ua.udunt.ise.lexeme.LexemeAnalyzer;
@@ -15,16 +15,16 @@ import ua.udunt.ise.lexeme.LexemeType;
 
 /**
  * The {@code TimingAnalyzer} class extends {@code AbstractAnalyzer} to perform timing analysis
- * on lexeme operations using a Queue and LinkedList data structure. It measures the performance of
+ * on lexeme operations using a Deque and LinkedList data structure. It measures the performance of
  * lexeme addition, searching, and removal.
  */
 public class TimingAnalyzer extends AbstractAnalyzer {
 
-    private final Queue<String> queue = new ArrayDeque<>();
+    private final Deque<String> deque = new ArrayDeque<>();
     private final List<String> linkedList = new LinkedList<>();
     private final Random random = new Random();
     private final List<DataStructure> supportedDataStructures = Arrays.asList(
-            DataStructure.QUEUE,
+            DataStructure.DEQUE,
             DataStructure.LINKED_LIST
     );
 
@@ -47,12 +47,12 @@ public class TimingAnalyzer extends AbstractAnalyzer {
     @Override
     public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
         extractLexemes(code, lexemeType);
-        boolean hasLexemes = !queue.isEmpty() || !linkedList.isEmpty();
+        boolean hasLexemes = !deque.isEmpty() || !linkedList.isEmpty();
         if (!hasLexemes) {
             throw new IllegalArgumentException("No lexemes available for performance analysis");
         }
         System.out.println("\nExtracted lexemes in each data structure:");
-        System.out.println("Queue: " + queue);
+        System.out.println("Deque: " + deque);
         System.out.println("LinkedList: " + linkedList);
 
         operation.run();
@@ -106,55 +106,55 @@ public class TimingAnalyzer extends AbstractAnalyzer {
     }
 
     /**
-     * Adds a lexeme to both queue and linked list data structures.
+     * Adds a lexeme to both deque and linked list data structures.
      *
      * @param lexeme the lexeme to add
      */
     @Override
     public void addLexeme(String lexeme) {
-        addToStructure(lexeme, queue, DataStructure.QUEUE);
+        addToStructure(lexeme, deque, DataStructure.DEQUE);
         addToStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**
-     * Removes a lexeme from both queue and linked list data structures.
+     * Removes a lexeme from both deque and linked list data structures.
      *
      * @param lexeme the lexeme to remove
      */
     @Override
     public void removeLexeme(String lexeme) {
-        removeFromStructure(lexeme, queue, DataStructure.QUEUE);
+        removeFromStructure(lexeme, deque, DataStructure.DEQUE);
         removeFromStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**
-     * Searches for a lexeme in both queue and linked list data structures.
+     * Searches for a lexeme in both deque and linked list data structures.
      *
      * @param lexeme the lexeme to search for
      */
     @Override
     public void searchLexeme(String lexeme) {
-        searchInStructure(lexeme, queue, DataStructure.QUEUE);
+        searchInStructure(lexeme, deque, DataStructure.DEQUE);
         searchInStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
     }
 
     /**
-     * Retrieves a random lexeme count from the queue.
+     * Retrieves a random lexeme count from the deque.
      *
-     * @return a random number of lexemes in the queue
+     * @return a random number of lexemes in the deque
      */
     public int getRandomLexemeCount() {
-        return random.nextInt(queue.size()) + 1;
+        return random.nextInt(deque.size()) + 1;
     }
 
     /**
-     * Retrieves a lexeme from the queue based on an index.
+     * Retrieves a lexeme from the deque based on an index.
      *
      * @param index the index to search for
      * @return the lexeme found at the given index, or null if not found
      */
     public String searchLexemeByIndex(int index) {
-        return queue.stream()
+        return deque.stream()
                 .skip(index)
                 .findFirst()
                 .orElse(null);
