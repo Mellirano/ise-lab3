@@ -212,7 +212,7 @@ public class TimingAnalyzer {
         double averageTime = stat.calculateAverageTime(type);
 
         log.info("{} -> {}: {} operations, Average time: {} ns",
-                ds, type.name(), opsCount, String.format("%.2f", averageTime));
+                ds.name(), type.name(), opsCount, String.format("%.2f", averageTime));
     }
 
     /**
@@ -226,8 +226,8 @@ public class TimingAnalyzer {
         double lowerBound = mean - confidenceInterval;
         double upperBound = mean + confidenceInterval;
 
-        log.info("{} ({}) 95% Confidence interval: [{} ns, {} ns] (mean: {} ns)",
-                type.name(), ds.name(),
+        log.info("{} -> {} 95% Confidence interval: [{} ns, {} ns] (mean: {} ns)",
+                ds.name(), type.name(),
                 String.format("%.2f", lowerBound),
                 String.format("%.2f", upperBound),
                 String.format("%.2f", mean));
