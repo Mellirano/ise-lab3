@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="d87223fc-8630-4339-ad79-48bb10af9546" name="Changes" comment="Fix logging">
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ExternalProjectsData">
+    <projectState path="$PROJECT_DIR$">
+      <ProjectState />
+    </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ise-timing-analyzer" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;Mellirano&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/Mellirano/ise-lab3.git&quot;,
+    &quot;accountId&quot;: &quot;6388d8ce-983a-4274-baa1-4ad181147c7a&quot;
+  }
+}</component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/ua/udunt/ise/Lab3.java" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="2uOt9z3SlrJp16P4kkUWgTrqc6N" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Gradle.ise-lab3 [:ua.udunt.ise.IseApplication.main()].executor": "Run",
+    "Gradle.ise-lab3 [:ua.udunt.ise.Lab3.main()].executor": "Run",
+    "Gradle.ise-lab3 [:ua.udunt.ise.Main.main()].executor": "Run",
+    "Gradle.ise-lab3 [build].executor": "Run",
+    "Gradle.ise-lab3 [clean].executor": "Run",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "main",
+    "ignore.virus.scanning.warn.message": "true",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "C:/Users/valex/IdeaProjects/ise-timing-analyzer",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "onboarding.tips.debug.path": "C:/Users/valex/IdeaProjects/ise-lab3/src/main/java/ua/udunt/ise/Main.java",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "run.code.analysis.last.selected.profile": "pProject Default",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "vue.rearranger.settings.migration": "true"
+  }
+}]]></component>
+  <component name="RunManager" selected="Application.IseApplication">
+    <configuration name="IseApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="ua.udunt.ise.IseApplication" />
+      <module name="ise-timing-analyzer.main" />
+      <option name="PROGRAM_PARAMETERS" value="100000" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="ua.udunt.ise.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="ise-lab3 [build]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="build" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <configuration name="ise-lab3 [clean]" type="GradleRunConfiguration" factoryName="Gradle" temporary="true">
+      <ExternalSystemSettings>
+        <option name="executionName" />
+        <option name="externalProjectPath" value="$PROJECT_DIR$" />
+        <option name="externalSystemIdString" value="GRADLE" />
+        <option name="scriptParameters" />
+        <option name="taskDescriptions">
+          <list />
+        </option>
+        <option name="taskNames">
+          <list>
+            <option value="clean" />
+          </list>
+        </option>
+        <option name="vmOptions" />
+      </ExternalSystemSettings>
+      <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+      <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
+      <DebugAllEnabled>false</DebugAllEnabled>
+      <RunAsTest>false</RunAsTest>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="Application.IseApplication" />
+      <item itemvalue="Gradle.ise-lab3 [build]" />
+      <item itemvalue="Gradle.ise-lab3 [clean]" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.IseApplication" />
+        <item itemvalue="Gradle.ise-lab3 [clean]" />
+        <item itemvalue="Gradle.ise-lab3 [build]" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-a94e463ab2e7-intellij.indexing.shared.core-IU-243.26053.27" />
+        <option value="bundled-js-predefined-d6986cc7102b-1632447f56bf-JavaScript-IU-243.26053.27" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="d87223fc-8630-4339-ad79-48bb10af9546" name="Changes" comment="" />
+      <created>1742131308979</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1742131308979</updated>
+      <workItem from="1742131310185" duration="9814000" />
+      <workItem from="1742144166852" duration="722000" />
+      <workItem from="1742144899575" duration="1148000" />
+      <workItem from="1742146062430" duration="428000" />
+      <workItem from="1742146546520" duration="2000" />
+      <workItem from="1742219240608" duration="12939000" />
+      <workItem from="1742235535696" duration="3447000" />
+      <workItem from="1742318860681" duration="3140000" />
+      <workItem from="1742322047780" duration="60000" />
+      <workItem from="1742386350283" duration="2066000" />
+      <workItem from="1742388878832" duration="2362000" />
+      <workItem from="1742395704035" duration="3032000" />
+      <workItem from="1742404793876" duration="4000" />
+      <workItem from="1742813435109" duration="17446000" />
+      <workItem from="1742838886964" duration="6540000" />
+      <workItem from="1742845629510" duration="240000" />
+      <workItem from="1742845909714" duration="11000" />
+    </task>
+    <task id="LOCAL-00001" summary="Initial commit">
+      <option name="closed" value="true" />
+      <created>1742146424937</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1742146424937</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Refactoring code">
+      <option name="closed" value="true" />
+      <created>1742226021589</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1742226021589</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Add timing analyzer">
+      <option name="closed" value="true" />
+      <created>1742232268905</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1742232268905</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Major update analyzers&#10;Add lexeme generator&#10;Add uploading of sample code from file + command line method selection">
+      <option name="closed" value="true" />
+      <created>1742238937838</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1742238937838</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Switch to nanoseconds&#10;Little refactoring">
+      <option name="closed" value="true" />
+      <created>1742321908898</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1742321908898</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Small fixes">
+      <option name="closed" value="true" />
+      <created>1742387013907</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1742387013907</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Code smells">
+      <option name="closed" value="true" />
+      <created>1742388602185</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1742388602185</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Remake project&#10;Add confidence interval calculation">
+      <option name="closed" value="true" />
+      <created>1742845096708</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1742845096708</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Fix logging">
+      <option name="closed" value="true" />
+      <created>1742845324679</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1742845324679</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Initial commit" />
+    <MESSAGE value="Refactoring code" />
+    <MESSAGE value="Add timing analyzer" />
+    <MESSAGE value="Major update analyzers&#10;Add lexeme generator&#10;Add uploading of sample code from file + command line method selection" />
+    <MESSAGE value="Switch to nanoseconds&#10;Little refactoring" />
+    <MESSAGE value="Small fixes" />
+    <MESSAGE value="Code smells" />
+    <MESSAGE value="Remake project&#10;Add confidence interval calculation" />
+    <MESSAGE value="Fix logging" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fix logging" />
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>
