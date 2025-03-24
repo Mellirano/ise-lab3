@@ -4,16 +4,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Random;
-import ua.udunt.ise.analyzer.ProbabilisticAnalyzer;
+import lombok.extern.slf4j.Slf4j;
 import ua.udunt.ise.analyzer.TimingAnalyzer;
 import ua.udunt.ise.lexeme.LexemeGenerator;
 
 /**
- * The {@code IseApplication} class serves as the main entry point for executing different types of lexeme analysis.
- * It provides command-line control to select between timing analysis and probabilistic analysis.
+ * The {@code IseApplication} class serves as the entry point for executing
+ * the timing analysis of lexeme operations on various data structures.
+ * <p>
+ * It loads a sample code file, performs a series of lexeme operations (add, search, remove),
+ * and delegates performance evaluation to the {@link TimingAnalyzer}.
  */
+@Slf4j
 public class IseApplication {
 
+    /**
+     * The sample source code loaded from file.
+     */
     private static final String SAMPLE_CODE;
 
     static {
@@ -21,41 +28,29 @@ public class IseApplication {
     }
 
     /**
-     * The main method that processes command-line arguments and initiates the selected analysis.
+     * The main method. Executes performance analysis either with a default repeat count or
+     * with a user-supplied one.
      *
-     * @param args command-line arguments to specify which analysis to run ("timing" or "probabilistic").
-     *             If no argument is provided, timing analysis is executed by default.
+     * @param args Optional command-line argument to specify the number of operation repetitions
      */
     public static void main(String[] args) {
         int repeatCount = 10;
         if (args.length == 0) {
-            System.out.println("No argument provided. Running default timing analysis...");
+            log.info("No argument provided. Running default timing analysis...");
             runTimingAnalysis(repeatCount);
         } else {
-            if(args[1] != null) {
-                repeatCount = Integer.parseInt(args[1]);
+            if (args[0] != null) {
+                repeatCount = Integer.parseInt(args[0]);
             }
-            switch (args[0].toLowerCase()) {
-                case "timing" -> {
-                    System.out.println("Running timing analysis...");
-                    runTimingAnalysis(repeatCount);
-                }
-                case "probabilistic" -> {
-                    System.out.println("Running probabilistic analysis...");
-                    runProbabilisticAnalysis(repeatCount);
-                }
-                default -> {
-                    System.out.println("Invalid argument. Use 'timing' or 'probabilistic'. Running default timing analysis...");
-                    runTimingAnalysis(repeatCount);
-                }
-            }
+            runTimingAnalysis(repeatCount);
         }
     }
 
     /**
-     * Reads the sample Java code from an external file.
+     * Reads the sample code from a file in the resources' directory.
      *
-     * @return a string containing the Java code.
+     * @return The source code as a String
+     * @throws RuntimeException if reading the file fails
      */
     private static String readSampleCode() {
         try {
@@ -66,55 +61,36 @@ public class IseApplication {
     }
 
     /**
-     * Executes the timing analysis, measuring the performance of lexeme operations such as addition,
-     * searching, and removal.
+     * Executes the timing analysis using {@link TimingAnalyzer}.
+     * <p>
+     * Repeats lexeme operations (add, search, remove) for a specified number of iterations.
+     *
+     * @param repeatCount Number of times to repeat the lexeme operations
      */
     private static void runTimingAnalysis(int repeatCount) {
         TimingAnalyzer analyzer = new TimingAnalyzer();
-        System.out.println("\nPerforming timing analysis...");
+        log.info("Performing timing analysis...");
         analyzer.analyzePerformance(SAMPLE_CODE, () -> {
             Random random = new Random();
             for (int i = 0; i < repeatCount; i++) {
                 String newLexeme = LexemeGenerator.generateRandomLexeme();
-                System.out.println("Adding lexeme: " + newLexeme);
+                log.debug("Adding lexeme: {}", newLexeme);
                 analyzer.addLexeme(newLexeme);
 
                 int searchIndex = random.nextInt(analyzer.getRandomLexemeCount());
                 String searchLexeme = analyzer.searchLexemeByIndex(searchIndex);
                 if (searchLexeme != null) {
-                    System.out.println("Searching lexeme: " + searchLexeme);
+                    log.debug("Searching lexeme: {}", searchLexeme);
                     analyzer.searchLexeme(searchLexeme);
                 }
                 int removeIndex = random.nextInt(analyzer.getRandomLexemeCount());
                 String removeLexeme = analyzer.searchLexemeByIndex(removeIndex);
                 if (removeLexeme != null) {
-                    System.out.println("Removing lexeme: " + removeLexeme);
+                    log.debug("Removing lexeme: {}", removeLexeme);
                     analyzer.removeLexeme(removeLexeme);
                 }
             }
         });
-    }
-
-    /**
-     * Executes the probabilistic analysis, performing operations on randomly generated lexemes.
-     */
-    private static void runProbabilisticAnalysis(int repeatCount) {
-        try {
-            ProbabilisticAnalyzer analyzer = new ProbabilisticAnalyzer();
-            System.out.println("\nPerforming performance analysis...");
-            analyzer.analyzePerformance(SAMPLE_CODE, () -> {
-                for (String lexeme : LexemeGenerator.generateLexemes(repeatCount)) {
-                    System.out.println("Searching lexeme: " + lexeme);
-                    analyzer.searchLexeme(lexeme);
-
-                    System.out.println("Removing lexeme: " + lexeme);
-                    analyzer.removeLexeme(lexeme);
-                }
-            });
-
-        } catch (Exception e) {
-            System.err.println("An error occurred during execution: " + e.getMessage());
-        }
     }
 
 }

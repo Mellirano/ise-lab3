@@ -2,86 +2,116 @@ package ua.udunt.ise.analyzer;
 
 import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.EnumMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
+import lombok.Data;
+import lombok.extern.slf4j.Slf4j;
+import org.knowm.xchart.CategoryChart;
+import org.knowm.xchart.CategoryChartBuilder;
+import org.knowm.xchart.SwingWrapper;
+import org.knowm.xchart.style.Styler;
 import ua.udunt.ise.lexeme.LexemeAnalyzer;
 import ua.udunt.ise.lexeme.LexemeType;
 
 /**
- * The {@code TimingAnalyzer} class extends {@code AbstractAnalyzer} to perform timing analysis
- * on lexeme operations using a Deque and LinkedList data structure. It measures the performance of
- * lexeme addition, searching, and removal.
+ * The TimingAnalyzer class provides functionality to benchmark
+ * and analyze the performance of basic operations (add, search, remove)
+ * on different data structures using extracted code lexemes.
+ * It visualizes both average execution time and confidence intervals.
  */
-public class TimingAnalyzer extends AbstractAnalyzer {
+@Slf4j
+public class TimingAnalyzer {
+
+    private static final double CONFIDENCE_LEVEL = 1.96; // Default 95%
+
+    private final Map<DataStructure, OperationStats> stats = new EnumMap<>(DataStructure.class);
+    private final Random random = new Random();
 
     private final Deque<String> deque = new ArrayDeque<>();
     private final List<String> linkedList = new LinkedList<>();
-    private final Random random = new Random();
-    private final List<DataStructure> supportedDataStructures = Arrays.asList(
-            DataStructure.DEQUE,
-            DataStructure.LINKED_LIST
-    );
 
     /**
-     * Initializes the timing analyzer and sets up operation statistics for each data structure.
+     * Initializes the analyzer with supported data structures.
      */
     public TimingAnalyzer() {
-        for (DataStructure ds : supportedDataStructures) {
+        for (DataStructure ds : DataStructure.values()) {
             stats.put(ds, new OperationStats());
         }
     }
 
     /**
-     * Analyzes the performance of lexeme operations and executes a specified operation before analysis.
+     * Computes the confidence interval based on sample data.
      *
-     * @param code       the source code to analyze
-     * @param operation  a runnable operation to execute before analysis
-     * @param lexemeType the specific lexeme type to analyze (or null for all types)
+     * @param duration Operation durations
+     * @return Confidence interval range
      */
-    @Override
+    private static double computeConfidenceInterval(List<Long> duration) {
+        if (duration.size() < 2) {
+            return 0.0;
+        }
+        double mean = duration.stream()
+                .mapToLong(Long::longValue)
+                .average()
+                .orElse(0);
+
+        double standardDeviation = Math.sqrt(duration.stream()
+                .mapToDouble(v -> Math.pow(v - mean, 2)).sum() / (duration.size() - 1));
+
+        double operationCount = Math.sqrt(duration.size());
+
+        return CONFIDENCE_LEVEL * standardDeviation / operationCount;
+    }
+
+    /**
+     * Runs the performance analysis using the given code snippet and operation.
+     *
+     * @param code       Source code to analyze for lexemes
+     * @param operation  The operation to benchmark
+     * @param lexemeType Specific lexeme type to filter (nullable)
+     */
     public void analyzePerformance(String code, Runnable operation, LexemeType lexemeType) {
         extractLexemes(code, lexemeType);
         boolean hasLexemes = !deque.isEmpty() || !linkedList.isEmpty();
         if (!hasLexemes) {
             throw new IllegalArgumentException("No lexemes available for performance analysis");
         }
-        System.out.println("\nExtracted lexemes in each data structure:");
-        System.out.println("Deque: " + deque);
-        System.out.println("LinkedList: " + linkedList);
+        log.debug("Extracted lexemes in each data structure:");
+        log.debug("Deque: {}", deque);
+        log.debug("LinkedList: {}", linkedList);
 
         operation.run();
 
-        System.out.println("\nTiming analysis of each function:");
-        for (DataStructure ds : supportedDataStructures) {
-            OperationStats stat = stats.get(ds);
-            printPerformance(ds, "Additions", stat.addOps, stat.addTime);
-            printPerformance(ds, "Searches", stat.searchOps, stat.searchTime);
-            printPerformance(ds, "Removals", stat.removeOps, stat.removeTime);
+        log.info("Timing analysis of each function:");
+        for (DataStructure ds : DataStructure.values()) {
+            for (OperationType type : OperationType.values()) {
+                // Average stats logging
+                logAveragePerformance(ds, type);
+                // Confidence interval logging
+                logConfidenceInterval(ds, type);
+            }
         }
-        visualizePerformance(supportedDataStructures);
+        ChartBuilder.visualizeAveragePerformance(stats);
+        ChartBuilder.visualizePerformanceWithConfidence(stats);
     }
 
     /**
-     * Analyzes lexeme performance with a default lexeme type (null).
-     *
-     * @param code      the source code to analyze
-     * @param operation a runnable operation to execute before analysis
+     * Overloaded method to analyze performance without specifying a lexeme type.
      */
     public void analyzePerformance(String code, Runnable operation) {
         analyzePerformance(code, operation, null);
     }
 
     /**
-     * Extracts lexemes from the given code based on the specified lexeme type.
+     * Extracts lexemes from the given code and stores them in both data structures.
      *
-     * @param code       the source code to analyze
-     * @param lexemeType the specific lexeme type to extract (or null for all types)
+     * @param code       Source code to analyze
+     * @param lexemeType Optional lexeme type filter
      */
     private void extractLexemes(String code, LexemeType lexemeType) {
         Map<LexemeType, Set<String>> lexemesByType;
@@ -106,58 +136,282 @@ public class TimingAnalyzer extends AbstractAnalyzer {
     }
 
     /**
-     * Adds a lexeme to both deque and linked list data structures.
+     * Adds a lexeme to both Deque and LinkedList, measuring execution time.
      *
-     * @param lexeme the lexeme to add
+     * @param lexeme Lexeme to add
      */
-    @Override
     public void addLexeme(String lexeme) {
-        addToStructure(lexeme, deque, DataStructure.DEQUE);
-        addToStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
+        recordOperation(() -> deque.add(lexeme), DataStructure.DEQUE, OperationType.ADD);
+        recordOperation(() -> linkedList.add(lexeme), DataStructure.LINKED_LIST, OperationType.ADD);
     }
 
     /**
-     * Removes a lexeme from both deque and linked list data structures.
+     * Removes a lexeme from both data structures, measuring execution time.
      *
-     * @param lexeme the lexeme to remove
+     * @param lexeme Lexeme to remove
      */
-    @Override
     public void removeLexeme(String lexeme) {
-        removeFromStructure(lexeme, deque, DataStructure.DEQUE);
-        removeFromStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
+        recordOperation(() -> deque.remove(lexeme), DataStructure.DEQUE, OperationType.REMOVE);
+        recordOperation(() -> linkedList.remove(lexeme), DataStructure.LINKED_LIST, OperationType.REMOVE);
     }
 
     /**
-     * Searches for a lexeme in both deque and linked list data structures.
+     * Searches for a lexeme in both data structures, measuring execution time.
      *
-     * @param lexeme the lexeme to search for
+     * @param lexeme Lexeme to search
      */
-    @Override
     public void searchLexeme(String lexeme) {
-        searchInStructure(lexeme, deque, DataStructure.DEQUE);
-        searchInStructure(lexeme, linkedList, DataStructure.LINKED_LIST);
+        recordOperation(() -> deque.contains(lexeme), DataStructure.DEQUE, OperationType.SEARCH);
+        recordOperation(() -> linkedList.contains(lexeme), DataStructure.LINKED_LIST, OperationType.SEARCH);
     }
 
     /**
-     * Retrieves a random lexeme count from the deque.
+     * Records operation timing for a given data structure and operation type.
+     */
+    private void recordOperation(Runnable op, DataStructure ds, OperationType type) {
+        long duration = measureTime(op);
+        OperationStats stat = stats.get(ds);
+        switch (type) {
+            case ADD -> {
+                stat.addOpsDuration.add(duration);
+                stat.addTimeGauge += duration;
+                stat.addOpsCounter++;
+            }
+            case REMOVE -> {
+                stat.removeOpsDuration.add(duration);
+                stat.removeTimeGauge += duration;
+                stat.removeOpsCounter++;
+            }
+            case SEARCH -> {
+                stat.searchOpsDuration.add(duration);
+                stat.searchTimeGauge += duration;
+                stat.searchOpsCounter++;
+            }
+            default -> throw new IllegalArgumentException("Unknown operation type: " + type);
+        }
+    }
+
+    /**
+     * Measures the execution time of an operation in nanoseconds.
      *
-     * @return a random number of lexemes in the deque
+     * @param operation Operation to time
+     * @return Duration in nanoseconds
+     */
+    long measureTime(Runnable operation) {
+        long start = System.nanoTime();
+        operation.run();
+        return System.nanoTime() - start;
+    }
+
+    /**
+     * Logs the average execution time for a given data structure and operation type.
+     */
+    private void logAveragePerformance(DataStructure ds, OperationType type) {
+        OperationStats stat = stats.get(ds);
+        int opsCount = stat.getOpsCounter(type);
+        double averageTime = stat.calculateAverageTime(type);
+
+        log.info("{} -> {}: {} operations, Average time: {} ns",
+                ds, type.name(), opsCount, String.format("%.2f", averageTime));
+    }
+
+    /**
+     * Logs the 95% confidence interval for a given data structure and operation type.
+     */
+    private void logConfidenceInterval(DataStructure ds, OperationType type) {
+        OperationStats stat = stats.get(ds);
+        List<Long> duration = stat.getDuration(type);
+        double mean = duration.stream().mapToLong(Long::longValue).average().orElse(0);
+        double confidenceInterval = computeConfidenceInterval(duration);
+        double lowerBound = mean - confidenceInterval;
+        double upperBound = mean + confidenceInterval;
+
+        log.info("{} ({}) 95% Confidence interval: [{} ns, {} ns] (mean: {} ns)",
+                type.name(), ds.name(),
+                String.format("%.2f", lowerBound),
+                String.format("%.2f", upperBound),
+                String.format("%.2f", mean));
+    }
+
+    /**
+     * @return A random number of lexemes from the deque.
      */
     public int getRandomLexemeCount() {
         return random.nextInt(deque.size()) + 1;
     }
 
     /**
-     * Retrieves a lexeme from the deque based on an index.
+     * Retrieves a lexeme by index from the deque.
      *
-     * @param index the index to search for
-     * @return the lexeme found at the given index, or null if not found
+     * @param index Index to retrieve
+     * @return Lexeme or null if out of bounds
      */
     public String searchLexemeByIndex(int index) {
         return deque.stream()
                 .skip(index)
                 .findFirst()
                 .orElse(null);
+    }
+
+    /**
+     * Enum representing supported data structures.
+     */
+    enum DataStructure {
+
+        DEQUE, LINKED_LIST
+
+    }
+
+    /**
+     * Enum representing operation types.
+     */
+    enum OperationType {
+
+        ADD, REMOVE, SEARCH
+
+    }
+
+    /**
+     * Helper class to hold statistics for a single data structure.
+     */
+    @Data
+    private static final class OperationStats {
+
+        private long addTimeGauge = 0L;
+        private long searchTimeGauge = 0L;
+        private long removeTimeGauge = 0L;
+
+        private int addOpsCounter = 0;
+        private int searchOpsCounter = 0;
+        private int removeOpsCounter = 0;
+
+        private List<Long> addOpsDuration = new ArrayList<>();
+        private List<Long> searchOpsDuration = new ArrayList<>();
+        private List<Long> removeOpsDuration = new ArrayList<>();
+
+        /**
+         * Calculates average execution time for a given operation.
+         */
+        double calculateAverageTime(OperationType type) {
+            return switch (type) {
+                case ADD -> addOpsCounter == 0 ? 0 : (double) addTimeGauge / addOpsCounter;
+                case REMOVE -> removeOpsCounter == 0 ? 0 : (double) removeTimeGauge / removeOpsCounter;
+                case SEARCH -> searchOpsCounter == 0 ? 0 : (double) searchTimeGauge / searchOpsCounter;
+            };
+        }
+
+        /**
+         * Returns list of operation durations for a given type.
+         */
+        List<Long> getDuration(OperationType type) {
+            return switch (type) {
+                case ADD -> addOpsDuration;
+                case REMOVE -> removeOpsDuration;
+                case SEARCH -> searchOpsDuration;
+            };
+        }
+
+        /**
+         * Returns total operation count for a given type.
+         */
+        int getOpsCounter(OperationType type) {
+            return switch (type) {
+                case ADD -> addOpsCounter;
+                case REMOVE -> removeOpsCounter;
+                case SEARCH -> searchOpsCounter;
+            };
+        }
+
+    }
+
+    /**
+     * Helper class to generate performance charts.
+     */
+    private static final class ChartBuilder {
+
+        /**
+         * Builds and displays average operation time chart.
+         */
+        private static void visualizeAveragePerformance(Map<DataStructure, OperationStats> stats) {
+            List<String> labels = new ArrayList<>();
+            List<Double> addTimeDuration = new ArrayList<>();
+            List<Double> searchTimeDuration = new ArrayList<>();
+            List<Double> removeTimeDuration = new ArrayList<>();
+
+            for (DataStructure ds : DataStructure.values()) {
+                OperationStats stat = stats.get(ds);
+                labels.add(ds.name());
+                addTimeDuration.add(stat.calculateAverageTime(OperationType.ADD));
+                searchTimeDuration.add(stat.calculateAverageTime(OperationType.SEARCH));
+                removeTimeDuration.add(stat.calculateAverageTime(OperationType.REMOVE));
+            }
+
+            CategoryChart chart = new CategoryChartBuilder()
+                    .width(800)
+                    .height(600)
+                    .title("Data structure performance")
+                    .xAxisTitle("Operations")
+                    .yAxisTitle("Time (nanoseconds)")
+                    .theme(Styler.ChartTheme.Matlab)
+                    .build();
+
+            chart.addSeries("Addition", labels, addTimeDuration);
+            chart.addSeries("Search", labels, searchTimeDuration);
+            chart.addSeries("Removal", labels, removeTimeDuration);
+
+            new SwingWrapper<>(chart).displayChart();
+        }
+
+        /**
+         * Builds and displays performance chart with confidence intervals.
+         */
+        private static void visualizePerformanceWithConfidence(Map<DataStructure, OperationStats> stats) {
+            List<String> labels = new ArrayList<>();
+            List<Double> addMeans = new ArrayList<>();
+            List<Double> addErrors = new ArrayList<>();
+
+            List<Double> searchMeans = new ArrayList<>();
+            List<Double> searchErrors = new ArrayList<>();
+
+            List<Double> removeMeans = new ArrayList<>();
+            List<Double> removeErrors = new ArrayList<>();
+
+            for (DataStructure ds : DataStructure.values()) {
+                labels.add(ds.name());
+                OperationStats stat = stats.get(ds);
+                collectConfidenceInterval(stat, OperationType.ADD, addMeans, addErrors);
+                collectConfidenceInterval(stat, OperationType.SEARCH, searchMeans, searchErrors);
+                collectConfidenceInterval(stat, OperationType.REMOVE, removeMeans, removeErrors);
+            }
+
+            CategoryChart chart = new CategoryChartBuilder()
+                    .width(900)
+                    .height(600)
+                    .title("Data structure performance with 95% confidence level")
+                    .xAxisTitle("Operations")
+                    .yAxisTitle("Time (nanoseconds)")
+                    .theme(Styler.ChartTheme.Matlab)
+                    .build();
+
+            chart.addSeries("Addition", labels, addMeans, addErrors);
+            chart.addSeries("Search", labels, searchMeans, searchErrors);
+            chart.addSeries("Removal", labels, removeMeans, removeErrors);
+
+            new SwingWrapper<>(chart).displayChart();
+        }
+
+        /**
+         * Collects mean and confidence interval values for charting.
+         */
+        private static void collectConfidenceInterval(OperationStats stat, OperationType type,
+                                                      List<Double> means, List<Double> errors) {
+            List<Long> durations = stat.getDuration(type);
+            double mean = stat.calculateAverageTime(type);
+            double ci = computeConfidenceInterval(durations);
+            means.add(mean);
+            errors.add(ci);
+        }
+
     }
 
 }

@@ -1,5 +1,12 @@
+buildscript {
+    ext {
+        lombokVersion = '1.18.34'
+    }
+}
+
 plugins {
     id 'java'
+    id 'checkstyle'
 }
 
 group = 'ua.udunt.ise'
@@ -10,8 +17,17 @@ repositories {
 
 dependencies {
     implementation(
-            'org.knowm.xchart:xchart:3.8.8'
+            'org.knowm.xchart:xchart:3.8.8',
+            'org.slf4j:slf4j-api:2.0.9',
+            'ch.qos.logback:logback-classic:1.4.12'
     )
+    compileOnly(
+            "org.projectlombok:lombok:${lombokVersion}"
+    )
+    annotationProcessor(
+            "org.projectlombok:lombok:${lombokVersion}"
+    )
+
     testImplementation platform(
             'org.junit:junit-bom:5.10.0'
     )
@@ -22,4 +38,9 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+checkstyle {
+    toolVersion "10.12.4"
+    configFile = file("${project.rootDir}/checkstyle/checkstyle.xml")
 }
