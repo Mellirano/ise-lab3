@@ -362,7 +362,8 @@ public class TimingAnalyzer {
                 chart.addSeries("Removal", labels, removeTimeDuration);
 
                 try {
-                    BitmapEncoder.saveBitmap(chart, "./charts/average_performance", BitmapEncoder.BitmapFormat.PNG);
+                    BitmapEncoder.saveBitmap(chart, "./charts/average_performance_"
+                            + System.nanoTime(), BitmapEncoder.BitmapFormat.PNG);
                     log.info("Saved chart to './charts/average_performance'");
                 } catch (IOException e) {
                     log.error("Cannot write chart to file", e);
@@ -409,7 +410,8 @@ public class TimingAnalyzer {
                 chart.addSeries("Removal", labels, removeMeans, removeErrors);
 
                 try {
-                    BitmapEncoder.saveBitmap(chart, "./charts/confidence_performance", BitmapEncoder.BitmapFormat.PNG);
+                    BitmapEncoder.saveBitmap(chart, "./charts/confidence_performance_"
+                            + System.nanoTime(), BitmapEncoder.BitmapFormat.PNG);
                     log.info("Saved chart to './charts/confidence_performance'");
                 } catch (IOException e) {
                     log.error("Cannot write chart to file", e);
