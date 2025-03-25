@@ -7,6 +7,7 @@ import java.util.Random;
 import lombok.extern.slf4j.Slf4j;
 import ua.udunt.ise.analyzer.TimingAnalyzer;
 import ua.udunt.ise.lexeme.LexemeGenerator;
+import ua.udunt.ise.util.HardUtil;
 
 /**
  * The {@code IseApplication} class serves as the entry point for executing
@@ -34,6 +35,7 @@ public class IseApplication {
      * @param args Optional command-line argument to specify the number of operation repetitions
      */
     public static void main(String[] args) {
+        HardUtil.logHardwareInfo();
         int repeatCount = 10;
         if (args.length == 0) {
             log.info("No argument provided. Running default timing analysis...");

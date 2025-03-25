@@ -19,7 +19,8 @@ dependencies {
     implementation(
             'org.knowm.xchart:xchart:3.8.8',
             'org.slf4j:slf4j-api:2.0.9',
-            'ch.qos.logback:logback-classic:1.4.12'
+            'ch.qos.logback:logback-classic:1.4.12',
+            'com.github.oshi:oshi-core:6.6.1'
     )
     compileOnly(
             "org.projectlombok:lombok:${lombokVersion}"
