@@ -54,7 +54,9 @@ public class IseApplication {
      */
     private static String readSampleCode() {
         try {
-            return Files.readString(Path.of("src/main/resources/sample_code.txt"));
+            String sampleCode =  Files.readString(Path.of("./samples/sample_code.txt"));
+            log.debug("Read sample code: {}", sampleCode);
+            return sampleCode;
         } catch (IOException e) {
             throw new RuntimeException("Failed to load sample code file", e);
         }

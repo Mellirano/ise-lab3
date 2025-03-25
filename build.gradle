@@ -36,6 +36,17 @@ dependencies {
     )
 }
 
+jar {
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    manifest {
+        attributes 'Main-Class': 'ua.udunt.ise.IseApplication'
+    }
+    from {
+        configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+    }
+}
+
+
 test {
     useJUnitPlatform()
 }

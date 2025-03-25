@@ -1,5 +1,6 @@
 package ua.udunt.ise.analyzer;
 
+import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -12,9 +13,9 @@ import java.util.Random;
 import java.util.Set;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
+import org.knowm.xchart.BitmapEncoder;
 import org.knowm.xchart.CategoryChart;
 import org.knowm.xchart.CategoryChartBuilder;
-import org.knowm.xchart.SwingWrapper;
 import org.knowm.xchart.style.Styler;
 import ua.udunt.ise.lexeme.LexemeAnalyzer;
 import ua.udunt.ise.lexeme.LexemeType;
@@ -330,74 +331,92 @@ public class TimingAnalyzer {
     private static final class ChartBuilder {
 
         /**
-         * Builds and displays average operation time chart.
+         * Builds and upload to file average operation time chart.
          */
         private static void visualizeAveragePerformance(Map<DataStructure, OperationStats> stats) {
-            List<String> labels = new ArrayList<>();
-            List<Double> addTimeDuration = new ArrayList<>();
-            List<Double> searchTimeDuration = new ArrayList<>();
-            List<Double> removeTimeDuration = new ArrayList<>();
+            try {
+                List<String> labels = new ArrayList<>();
+                List<Double> addTimeDuration = new ArrayList<>();
+                List<Double> searchTimeDuration = new ArrayList<>();
+                List<Double> removeTimeDuration = new ArrayList<>();
 
-            for (DataStructure ds : DataStructure.values()) {
-                OperationStats stat = stats.get(ds);
-                labels.add(ds.name());
-                addTimeDuration.add(stat.calculateAverageTime(OperationType.ADD));
-                searchTimeDuration.add(stat.calculateAverageTime(OperationType.SEARCH));
-                removeTimeDuration.add(stat.calculateAverageTime(OperationType.REMOVE));
+                for (DataStructure ds : DataStructure.values()) {
+                    OperationStats stat = stats.get(ds);
+                    labels.add(ds.name());
+                    addTimeDuration.add(stat.calculateAverageTime(OperationType.ADD));
+                    searchTimeDuration.add(stat.calculateAverageTime(OperationType.SEARCH));
+                    removeTimeDuration.add(stat.calculateAverageTime(OperationType.REMOVE));
+                }
+
+                CategoryChart chart = new CategoryChartBuilder()
+                        .width(800)
+                        .height(600)
+                        .title("Data structure performance")
+                        .xAxisTitle("Operations")
+                        .yAxisTitle("Time (nanoseconds)")
+                        .theme(Styler.ChartTheme.Matlab)
+                        .build();
+
+                chart.addSeries("Addition", labels, addTimeDuration);
+                chart.addSeries("Search", labels, searchTimeDuration);
+                chart.addSeries("Removal", labels, removeTimeDuration);
+
+                try {
+                    BitmapEncoder.saveBitmap(chart, "./charts/average_performance", BitmapEncoder.BitmapFormat.PNG);
+                    log.info("Saved chart to './charts/average_performance'");
+                } catch (IOException e) {
+                    log.error("Cannot write chart to file", e);
+                }
+            } catch (Exception e) {
+                log.error("", e);
             }
-
-            CategoryChart chart = new CategoryChartBuilder()
-                    .width(800)
-                    .height(600)
-                    .title("Data structure performance")
-                    .xAxisTitle("Operations")
-                    .yAxisTitle("Time (nanoseconds)")
-                    .theme(Styler.ChartTheme.Matlab)
-                    .build();
-
-            chart.addSeries("Addition", labels, addTimeDuration);
-            chart.addSeries("Search", labels, searchTimeDuration);
-            chart.addSeries("Removal", labels, removeTimeDuration);
-
-            new SwingWrapper<>(chart).displayChart();
         }
 
         /**
-         * Builds and displays performance chart with confidence intervals.
+         * Builds and upload to file performance chart with confidence intervals.
          */
         private static void visualizePerformanceWithConfidence(Map<DataStructure, OperationStats> stats) {
-            List<String> labels = new ArrayList<>();
-            List<Double> addMeans = new ArrayList<>();
-            List<Double> addErrors = new ArrayList<>();
+            try {
+                List<String> labels = new ArrayList<>();
+                List<Double> addMeans = new ArrayList<>();
+                List<Double> addErrors = new ArrayList<>();
 
-            List<Double> searchMeans = new ArrayList<>();
-            List<Double> searchErrors = new ArrayList<>();
+                List<Double> searchMeans = new ArrayList<>();
+                List<Double> searchErrors = new ArrayList<>();
 
-            List<Double> removeMeans = new ArrayList<>();
-            List<Double> removeErrors = new ArrayList<>();
+                List<Double> removeMeans = new ArrayList<>();
+                List<Double> removeErrors = new ArrayList<>();
 
-            for (DataStructure ds : DataStructure.values()) {
-                labels.add(ds.name());
-                OperationStats stat = stats.get(ds);
-                collectConfidenceInterval(stat, OperationType.ADD, addMeans, addErrors);
-                collectConfidenceInterval(stat, OperationType.SEARCH, searchMeans, searchErrors);
-                collectConfidenceInterval(stat, OperationType.REMOVE, removeMeans, removeErrors);
+                for (DataStructure ds : DataStructure.values()) {
+                    labels.add(ds.name());
+                    OperationStats stat = stats.get(ds);
+                    collectConfidenceInterval(stat, OperationType.ADD, addMeans, addErrors);
+                    collectConfidenceInterval(stat, OperationType.SEARCH, searchMeans, searchErrors);
+                    collectConfidenceInterval(stat, OperationType.REMOVE, removeMeans, removeErrors);
+                }
+
+                CategoryChart chart = new CategoryChartBuilder()
+                        .width(900)
+                        .height(600)
+                        .title("Data structure performance with 95% confidence level")
+                        .xAxisTitle("Operations")
+                        .yAxisTitle("Time (nanoseconds)")
+                        .theme(Styler.ChartTheme.Matlab)
+                        .build();
+
+                chart.addSeries("Addition", labels, addMeans, addErrors);
+                chart.addSeries("Search", labels, searchMeans, searchErrors);
+                chart.addSeries("Removal", labels, removeMeans, removeErrors);
+
+                try {
+                    BitmapEncoder.saveBitmap(chart, "./charts/confidence_performance", BitmapEncoder.BitmapFormat.PNG);
+                    log.info("Saved chart to './charts/confidence_performance'");
+                } catch (IOException e) {
+                    log.error("Cannot write chart to file", e);
+                }
+            } catch (Exception e) {
+                log.error("", e);
             }
-
-            CategoryChart chart = new CategoryChartBuilder()
-                    .width(900)
-                    .height(600)
-                    .title("Data structure performance with 95% confidence level")
-                    .xAxisTitle("Operations")
-                    .yAxisTitle("Time (nanoseconds)")
-                    .theme(Styler.ChartTheme.Matlab)
-                    .build();
-
-            chart.addSeries("Addition", labels, addMeans, addErrors);
-            chart.addSeries("Search", labels, searchMeans, searchErrors);
-            chart.addSeries("Removal", labels, removeMeans, removeErrors);
-
-            new SwingWrapper<>(chart).displayChart();
         }
 
         /**

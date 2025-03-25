@@ -4,13 +4,16 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="d87223fc-8630-4339-ad79-48bb10af9546" name="Changes" comment="Fix logging">
-      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/codeStyles/codeStyleConfig.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+    <list default="true" id="d87223fc-8630-4339-ad79-48bb10af9546" name="Changes" comment="Rename project">
+      <change afterPath="$PROJECT_DIR$/Dockerfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/settings.gradle" beforeDir="false" afterPath="$PROJECT_DIR$/settings.gradle" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/udunt/ise/IseApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/udunt/ise/IseApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/ua/udunt/ise/analyzer/TimingAnalyzer.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/ua/udunt/ise/analyzer/TimingAnalyzer.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/sample_code.txt" beforeDir="false" afterPath="$PROJECT_DIR$/samples/sample_code.txt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +38,17 @@
                 <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
                 <item name="ise-timing-analyzer" type="f1a62948:ProjectNode" />
               </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ise-timing-analyzer" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="ise-timing-analyzer" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+                <item name="build" type="c8890929:TasksNode$1" />
+              </path>
             </expand>
             <select />
           </tree_state>
@@ -46,6 +60,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Class" />
+        <option value="Dockerfile" />
       </list>
     </option>
   </component>
@@ -82,25 +97,32 @@
     "Gradle.ise-lab3 [:ua.udunt.ise.Main.main()].executor": "Run",
     "Gradle.ise-lab3 [build].executor": "Run",
     "Gradle.ise-lab3 [clean].executor": "Run",
+    "Gradle.ise-timing-analyzer [:ua.udunt.ise.IseApplication.main()].executor": "Run",
     "RunOnceActivity.git.unshallow": "true",
     "git-widget-placeholder": "main",
     "ignore.virus.scanning.warn.message": "true",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/valex/IdeaProjects/ise-timing-analyzer",
+    "last_opened_file_path": "C:/Users/valex/IdeaProjects/ise-timing-analyzer/src/main",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/valex/IdeaProjects/ise-lab3/src/main/java/ua/udunt/ise/Main.java",
+    "onboarding.tips.debug.path": "C:/Users/valex/IdeaProjects/ise-timing-analyzer/src/main/main/src/main/java/ua/udunt/ise/Main.java",
     "project.structure.last.edited": "Modules",
     "project.structure.proportion": "0.15",
     "project.structure.side.proportion": "0.2",
     "run.code.analysis.last.selected.profile": "pProject Default",
-    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\valex\IdeaProjects\ise-timing-analyzer\samples" />
+      <recent name="C:\Users\valex\IdeaProjects\ise-timing-analyzer" />
+    </key>
+  </component>
   <component name="RunManager" selected="Application.IseApplication">
     <configuration name="IseApplication" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
       <option name="MAIN_CLASS_NAME" value="ua.udunt.ise.IseApplication" />
@@ -160,6 +182,23 @@
       <RunAsTest>false</RunAsTest>
       <method v="2" />
     </configuration>
+    <configuration default="true" type="JetRunConfigurationType">
+      <module name="ise-timing-analyzer.main" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <module name="ise-timing-analyzer.main" />
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+    <configuration default="true" type="docker-deploy" factoryName="dockerfile" temporary="true">
+      <deployment type="dockerfile">
+        <settings />
+      </deployment>
+      <method v="2" />
+    </configuration>
     <list>
       <item itemvalue="Application.IseApplication" />
       <item itemvalue="Gradle.ise-lab3 [build]" />
@@ -167,9 +206,9 @@
     </list>
     <recent_temporary>
       <list>
-        <item itemvalue="Application.IseApplication" />
-        <item itemvalue="Gradle.ise-lab3 [clean]" />
         <item itemvalue="Gradle.ise-lab3 [build]" />
+        <item itemvalue="Gradle.ise-lab3 [clean]" />
+        <item itemvalue="Application.IseApplication" />
       </list>
     </recent_temporary>
   </component>
@@ -205,7 +244,10 @@
       <workItem from="1742813435109" duration="17446000" />
       <workItem from="1742838886964" duration="6540000" />
       <workItem from="1742845629510" duration="240000" />
-      <workItem from="1742845909714" duration="11000" />
+      <workItem from="1742845909714" duration="205000" />
+      <workItem from="1742906806943" duration="2471000" />
+      <workItem from="1742912399451" duration="81000" />
+      <workItem from="1742912485177" duration="2005000" />
     </task>
     <task id="LOCAL-00001" summary="Initial commit">
       <option name="closed" value="true" />
@@ -279,7 +321,15 @@
       <option name="project" value="LOCAL" />
       <updated>1742845324679</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="Rename project">
+      <option name="closed" value="true" />
+      <created>1742845982896</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1742845982896</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -306,7 +356,19 @@
     <MESSAGE value="Code smells" />
     <MESSAGE value="Remake project&#10;Add confidence interval calculation" />
     <MESSAGE value="Fix logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fix logging" />
+    <MESSAGE value="Rename project" />
+    <option name="LAST_COMMIT_MESSAGE" value="Rename project" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/main/src/main/java/ua/udunt/ise/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
